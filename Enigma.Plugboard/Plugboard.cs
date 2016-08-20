@@ -4,7 +4,7 @@ namespace Enigma.Plugboard
 {
     public class Plugboard
     {
-        public Plugboard(string wiredPairs)
+        public Plugboard(string wiredPairs = "")
         {
             if (Validation.IsNull(wiredPairs))
                 throw new ArgumentNullException(nameof(wiredPairs));
