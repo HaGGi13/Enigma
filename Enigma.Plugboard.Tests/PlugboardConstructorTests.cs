@@ -9,13 +9,6 @@ namespace Enigma.Plugboard.Tests
     [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
     public class PlugboardConstructorTests
     {
-        private const string CannotBeNullEmpryOrWithespacesExceptionMessage = "Wired pairs string cannot be empty or white spaces.";
-        private const string WiredPairsMustBePairsExceptionMessage = "Wired pairs must be pairs. Every letter must have another one.";
-        private const string WrongLengthExceptionMessage = "A wired pair string must be greater or equal 2 and less or equal 10.";
-        private const string ContainsNonLetterExceptionMessage = "Wired pairs must consist of letters only.";
-
-
-
         #region unsuccessful
 
         [TestMethod]
@@ -23,23 +16,7 @@ namespace Enigma.Plugboard.Tests
         {
             Action action = () => new Plugboard(null);
 
-            ConstructorActionShouldThrowArgumentException<ArgumentNullException>(action);
-        }
-
-        [TestMethod]
-        public void Argument_with_empty_string()
-        {
-            Action action = () => new Plugboard(string.Empty);
-
-            ConstructorActionShouldThrowArgumentException<ArgumentException>(action, CannotBeNullEmpryOrWithespacesExceptionMessage);
-        }
-
-        [TestMethod]
-        public void Argument_with_whitespace_string()
-        {
-            Action action = () => new Plugboard("   ");
-
-            ConstructorActionShouldThrowArgumentException<ArgumentException>(action, CannotBeNullEmpryOrWithespacesExceptionMessage);
+            action.ShouldThrowExactly<ArgumentNullException>();
         }
 
         [TestMethod]
@@ -51,7 +28,8 @@ namespace Enigma.Plugboard.Tests
 
             Action action = () => new Plugboard(oneLetterWiredPairString);
 
-            ConstructorActionShouldThrowArgumentException<ArgumentException>(action, WrongLengthExceptionMessage);
+            action.ShouldThrowExactly<ArgumentException>()
+                .WithMessage(ExceptionMessage.WiredPairsMustBePairsExceptionMessage);
         }
 
         [TestMethod]
@@ -63,31 +41,34 @@ namespace Enigma.Plugboard.Tests
 
             Action action = () => new Plugboard(wiredPairStringWithMissingPairPart);
 
-            ConstructorActionShouldThrowArgumentException<ArgumentException>(action, WiredPairsMustBePairsExceptionMessage);
+            action.ShouldThrowExactly<ArgumentException>()
+                .WithMessage(ExceptionMessage.WiredPairsMustBePairsExceptionMessage);
         }
 
         [TestMethod]
         public void Argument_with_one_over_max_allowed_wired_pairs_string_length()
         {
-            string oneToLongWiredPairString = "ABCDEFGHIJK";
+            string oneToLongWiredPairString = "ABCDEFGHIJKLMNOPQRSTU";
 
-            oneToLongWiredPairString.Should().HaveLength(11);
+            oneToLongWiredPairString.Should().HaveLength(21);
 
             Action action = () => new Plugboard(oneToLongWiredPairString);
 
-            ConstructorActionShouldThrowArgumentException<ArgumentException>(action, WrongLengthExceptionMessage);
+            action.ShouldThrowExactly<ArgumentException>()
+                .WithMessage(ExceptionMessage.WrongLengthExceptionMessage);
         }
 
         [TestMethod]
         public void Argument_with_to_long_wired_pair_string()
         {
-            string onePairToMuchWiredPairString = "ABCDEFGHIJKL";
+            string onePairToMuchWiredPairString = "ABCDEFGHIJKLMNOPQRSTUV";
 
-            onePairToMuchWiredPairString.Should().HaveLength(12);
+            onePairToMuchWiredPairString.Should().HaveLength(22);
 
             Action action = () => new Plugboard(onePairToMuchWiredPairString);
 
-            ConstructorActionShouldThrowArgumentException<ArgumentException>(action, WrongLengthExceptionMessage);
+            action.ShouldThrowExactly<ArgumentException>()
+                .WithMessage(ExceptionMessage.WrongLengthExceptionMessage);
         }
 
         [TestMethod]
@@ -99,7 +80,8 @@ namespace Enigma.Plugboard.Tests
 
             Action action = () => new Plugboard(onePairToMuchWiredPairString);
 
-            ConstructorActionShouldThrowArgumentException<ArgumentException>(action, ContainsNonLetterExceptionMessage);
+            action.ShouldThrowExactly<ArgumentException>()
+                .WithMessage(ExceptionMessage.ContainsNonLetterExceptionMessage);
         }
 
         [TestMethod]
@@ -111,7 +93,8 @@ namespace Enigma.Plugboard.Tests
 
             Action action = () => new Plugboard(onePairToMuchWiredPairString);
 
-            ConstructorActionShouldThrowArgumentException<ArgumentException>(action, ContainsNonLetterExceptionMessage);
+            action.ShouldThrowExactly<ArgumentException>()
+                .WithMessage(ExceptionMessage.ContainsNonLetterExceptionMessage);
         }
 
         [TestMethod]
@@ -123,12 +106,37 @@ namespace Enigma.Plugboard.Tests
 
             Action action = () => new Plugboard(onePairToMuchWiredPairString);
 
-            ConstructorActionShouldThrowArgumentException<ArgumentException>(action, ContainsNonLetterExceptionMessage);
+            action.ShouldThrowExactly<ArgumentException>()
+                .WithMessage(ExceptionMessage.ContainsNonLetterExceptionMessage);
         }
 
         #endregion
 
         #region successful
+
+        [TestMethod]
+        public void Test_default_constructor()
+        {
+            Action action = () => new Plugboard();
+
+            action.ShouldNotThrow();
+        }
+
+        [TestMethod]
+        public void Argument_with_empty_string()
+        {
+            Action action = () => new Plugboard(string.Empty);
+
+            action.ShouldNotThrow();
+        }
+
+        [TestMethod]
+        public void Argument_with_whitespace_string()
+        {
+            Action action = () => new Plugboard("   ");
+            
+            action.ShouldNotThrow();
+        }
 
         [TestMethod]
         public void Argument_with_min_allowed_wired_pairs_string_length()
@@ -145,26 +153,13 @@ namespace Enigma.Plugboard.Tests
         [TestMethod]
         public void Argument_with_max_allowed_wired_pairs_string_length()
         {
-            string maxWiredPairString = "ABCDEFGHIJ";
+            string maxWiredPairString = "ABCDEFGHIJKLMNOPQRST";
 
-            maxWiredPairString.Should().HaveLength(10);
+            maxWiredPairString.Should().HaveLength(20);
 
             Action action = () => new Plugboard(maxWiredPairString);
 
-            action.ShouldNotThrow<ArgumentException>();
-        }
-
-        #endregion
-
-
-        #region helper methods
-
-        private static void ConstructorActionShouldThrowArgumentException<T>(Action action, string message = null) where T : Exception
-        {
-            var exceptionAssertions = action.ShouldThrow<T>();
-
-            if (message != null)
-                exceptionAssertions.WithMessage(message);
+            action.ShouldNotThrow();
         }
 
         #endregion

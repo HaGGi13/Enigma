@@ -1,11 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace Enigma.Plugboard
 {
     internal static class Validation
     {
-        private const int MinWiredPairLength = 2;
-        private const int MaxWiredPairLength = 10;
+        private const int MaxWiredPairLength = 20;
 
 
 
@@ -13,24 +13,11 @@ namespace Enigma.Plugboard
         {
             return wiredPairs == null;
         }
-
-        internal static bool IsEmptyOrWhitespace(string wiredPairs)
-        {
-            return string.IsNullOrWhiteSpace(wiredPairs);
-        }
-
-        internal static bool IsToShort(string wiredPairs)
-        {
-            if (IsNull(wiredPairs))
-                return false;
-
-            return wiredPairs.Length < MinWiredPairLength;
-        }
-
+        
         internal static bool IsToLong(string wiredPairs)
         {
             if (IsNull(wiredPairs))
-                return false;
+                throw new ArgumentNullException(nameof(wiredPairs));
 
             return wiredPairs.Length > MaxWiredPairLength;
         }
@@ -38,7 +25,7 @@ namespace Enigma.Plugboard
         internal static bool IsPairPartMissing(string wiredPairs)
         {
             if (IsNull(wiredPairs))
-                return false;
+                throw new ArgumentNullException(nameof(wiredPairs));
 
             return wiredPairs.Length%2 != 0;
         }
@@ -46,7 +33,7 @@ namespace Enigma.Plugboard
         internal static bool ContainsNonLetter(string wiredPairs)
         {
             if (IsNull(wiredPairs))
-                return false;
+                throw new ArgumentNullException(nameof(wiredPairs));
 
             return wiredPairs.Any(c => !char.IsLetter(c));
         }
