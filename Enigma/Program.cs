@@ -10,6 +10,7 @@ namespace Enigma
     {
         static void Main(string[] args)
         {
+            //TODO: user interaction will be implemented after logic
         }
     }
 }
