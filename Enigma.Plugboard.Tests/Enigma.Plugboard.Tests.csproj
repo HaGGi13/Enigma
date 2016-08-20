@@ -60,11 +60,17 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="PlugboardTests.cs" />
+    <Compile Include="PlugboardConstructorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Enigma.Plugboard\Enigma.Plugboard.csproj">
+      <Project>{c6f726aa-bdde-4ef4-baed-f8ac5959dd36}</Project>
+      <Name>Enigma.Plugboard</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
